@@ -42,6 +42,9 @@ def test():
 #                display.draw_rgb_pixel( xx , yy , [255-R,255-G,255-B] )
     '''
 
+    ## clear_rgb(rgb_list) ##
+    clear_rgb([191,191,255])
+
     ## Draw Rainbow box between RED and GREEN (also givng you YELLOW and ORANGE) : ##
     if ( 0 ) :
         for y in range(0xf8):
@@ -53,14 +56,13 @@ def test():
 #                display.draw_rgb_pixel( x , y , (((y) & 0xf8) << 8) | (((x) & 0xfc) << 3) | ((0) >> 3) )
         sleep(1)
 
-    
     # draw_rgb_pixel(x, y, [R,G,B])
     display.draw_rgb_pixel(5, 5, [255,127,0])
 
-    # draw_line_rgb(self, x1, y1, x2, y2, rgb_list )
+    # draw_line_rgb( x1, y1, x2, y2, rgb_list )
     display.draw_line_rgb( 111, 111, 122, 233, [255,127,0] )
 
-    # def fill_ellipse_rgb(self, x0, y0, a, b, rgb_list )
+    # def fill_ellipse_rgb( x0, y0, a, b, rgb_list )
     display.fill_ellipse_rgb( 80, 90, 70, 60, [255,127,0] )
 
 
