@@ -52,7 +52,10 @@ def test():
 #                display.draw_rgb_pixel(x, y, 0xFFFF-display.color565(y, x, 0))
 #                display.draw_rgb_pixel( x , y , (((y) & 0xf8) << 8) | (((x) & 0xfc) << 3) | ((0) >> 3) )
         sleep(1)
+
     
+    # draw_rgb_pixel(x, y, [R,G,B])
+    display.draw_rgb_pixel(5, 5, [255,127,0])
 
     # draw_line_rgb(self, x1, y1, x2, y2, rgb_list )
     display.draw_line_rgb( 111, 111, 122, 233, [255,127,0] )
