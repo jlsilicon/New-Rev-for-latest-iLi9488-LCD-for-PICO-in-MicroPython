@@ -38,7 +38,7 @@ Bad / wrong color coding format being sent to the LCD.
 
 Working Functions : 
 
-    fill_vrect_rgb( X,Y, W,H, [R,G,B] )
+    # fill_vrect_rgb( X,Y, W,H, [R,G,B] )
     display.fill_vrect_rgb(0,0, 50,50, [127,127,127] )
 
     # draw_line_rgb(self, x1, y1, x2, y2, rgb_list )
