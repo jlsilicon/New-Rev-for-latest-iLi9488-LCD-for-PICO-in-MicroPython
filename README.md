@@ -17,7 +17,7 @@ Code in Progress :
 
 So far :
 
-Fixed Color codes to 3-byres RGB , not 2-bytes code, also Color Codes Inverted (255 - B).
+Fixed Color codes to 3-bytes RGB , not 2-bytes code, also Color Codes Inverted (255 - Byt).
 Code draws colored rectangles on screen.
 
 https://github.com/jlsilicon/New-Rev-for-latest-iLi9488-LCD-for-PICO-in-MicroPython/tree/main
