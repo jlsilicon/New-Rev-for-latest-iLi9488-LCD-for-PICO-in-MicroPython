@@ -38,6 +38,9 @@ Bad / wrong color coding format being sent to the LCD.
 
 Working Functions : 
 
+    # draw_rgb_pixel(x, y, [R,G,B])
+    display.draw_rgb_pixel(5, 5, [255,127,0])
+
     # fill_vrect_rgb( X,Y, W,H, [R,G,B] )
     display.fill_vrect_rgb(0,0, 50,50, [127,127,127] )
 
