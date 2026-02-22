@@ -37,16 +37,16 @@ def test():
         
         for yy in range( Y , (Y + H - 1) ) :
             for xx in range( X , (X + W - 1) ) :
-#                display.draw_rgb_pixel( xx , yy , [R,G,B] )
-                display.draw_rgb_pixel( xx , yy , [255-R,255-G,255-B] )
+                display.draw_rgb_pixel( xx , yy , [R,G,B] )
+#                display.draw_rgb_pixel( xx , yy , [255-R,255-G,255-B] )
 
 
-    '''
+    ## Draw Rainbow box between RED and GREEN (also givng you YELLOW and ORANGE) : ##
     for y in range(0xf8):
         for x in range(0xfc):
 #            display.draw_pixel(160, i, color565(255, 0, 0))
-#            display.draw_rgb_pixel(x, y, [y,x,0])
-            display.draw_rgb_pixel(x, y, [0xF7-y,0xFB-x,0xF7-0] )
+            display.draw_rgb_pixel(x, y, [y,x,0])
+#            display.draw_rgb_pixel(x, y, [0xF7-y,0xFB-x,0xF7-0] )
 #            display.draw_rgb_pixel(x, y, 0xFFFF-display.color565(y, x, 0))
 #            display.draw_rgb_pixel( x , y , (((y) & 0xf8) << 8) | (((x) & 0xfc) << 3) | ((0) >> 3) )
     sleep(1)
