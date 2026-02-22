@@ -8,7 +8,7 @@
 
 from    time          import sleep
 # from    ili9488       import Display
-from    ili9488_ch_2  import Display , color666 
+from    ili9488_b  import Display , color666 
 from    machine       import Pin, SPI
 import  random
 
@@ -33,16 +33,17 @@ def test():
 
     #
 
+    '''
     def  Fill_Rect_RGB( X , Y , W , H  ,  R,G,B ) :
         
         for yy in range( Y , (Y + H - 1) ) :
             for xx in range( X , (X + W - 1) ) :
                 display.draw_rgb_pixel( xx , yy , [R,G,B] )
 #                display.draw_rgb_pixel( xx , yy , [255-R,255-G,255-B] )
-
+    '''
 
     ## Draw Rainbow box between RED and GREEN (also givng you YELLOW and ORANGE) : ##
-    if ( 1 ) :
+    if ( 0 ) :
         for y in range(0xf8):
             for x in range(0xfc):
 #                display.draw_pixel(160, i, color565(255, 0, 0))
@@ -50,8 +51,16 @@ def test():
 #                display.draw_rgb_pixel(x, y, [0xF7-y,0xFB-x,0xF7-0] )
 #                display.draw_rgb_pixel(x, y, 0xFFFF-display.color565(y, x, 0))
 #                display.draw_rgb_pixel( x , y , (((y) & 0xf8) << 8) | (((x) & 0xfc) << 3) | ((0) >> 3) )
-    sleep(1)
-    '''
+        sleep(1)
+    
+
+    # draw_line_rgb(self, x1, y1, x2, y2, rgb_list )
+    display.draw_line_rgb( 111, 111, 122, 233, [255,127,0] )
+
+    # def fill_ellipse_rgb(self, x0, y0, a, b, rgb_list )
+    display.fill_ellipse_rgb( 80, 90, 70, 60, [255,127,0] )
+
+
 
     print("\n> ... Fill Rect GRAY ... ")
 #    display.fill_vrect(0,0, 320,480,0xFFFF)
