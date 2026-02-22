@@ -33,3 +33,16 @@ Original code only gives you a White screen.
 -
 
 Bad / wrong color coding format being sent to the LCD.
+
+-
+
+Working Functions : 
+
+    fill_vrect_rgb( X,Y, W,H, [R,G,B] )
+    display.fill_vrect_rgb(0,0, 50,50, [127,127,127] )
+
+    # draw_line_rgb(self, x1, y1, x2, y2, rgb_list )
+    display.draw_line_rgb( 111, 111, 122, 233, [255,127,0] )
+
+    # def fill_ellipse_rgb(self, x0, y0, a, b, rgb_list )
+    display.fill_ellipse_rgb( 80, 90, 70, 60, [255,127,0] )
