@@ -42,13 +42,14 @@ def test():
 
 
     ## Draw Rainbow box between RED and GREEN (also givng you YELLOW and ORANGE) : ##
-    for y in range(0xf8):
-        for x in range(0xfc):
-#            display.draw_pixel(160, i, color565(255, 0, 0))
-            display.draw_rgb_pixel(x, y, [y,x,0])
-#            display.draw_rgb_pixel(x, y, [0xF7-y,0xFB-x,0xF7-0] )
-#            display.draw_rgb_pixel(x, y, 0xFFFF-display.color565(y, x, 0))
-#            display.draw_rgb_pixel( x , y , (((y) & 0xf8) << 8) | (((x) & 0xfc) << 3) | ((0) >> 3) )
+    if ( 1 ) :
+        for y in range(0xf8):
+            for x in range(0xfc):
+#                display.draw_pixel(160, i, color565(255, 0, 0))
+                display.draw_rgb_pixel(x, y, [y,x,0])
+#                display.draw_rgb_pixel(x, y, [0xF7-y,0xFB-x,0xF7-0] )
+#                display.draw_rgb_pixel(x, y, 0xFFFF-display.color565(y, x, 0))
+#                display.draw_rgb_pixel( x , y , (((y) & 0xf8) << 8) | (((x) & 0xfc) << 3) | ((0) >> 3) )
     sleep(1)
     '''
 
