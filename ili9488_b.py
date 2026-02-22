@@ -1,5 +1,6 @@
 ### ili9488_b.py
-# - Added RGB 3-byte input Color formats for funcs - instead of 2-bytes that does not work on this LCD
+## - Added RGB 3-byte input Color formats for funcs - instead of 2-bytes that does not work on this LCD
+## - also needed Inverion (255 - B) of Color Codes 
 
 
 #ili9488.py
@@ -1106,5 +1107,6 @@ class Display(object):
         self.spi.write(data)
         self.spi.unlock()
         self.cs.value = True
+
 
 
