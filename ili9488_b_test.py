@@ -43,7 +43,7 @@ def test():
     '''
 
     ## clear_rgb(rgb_list) ##
-    display.clear_rgb([191,191,255])
+    display.clear_rgb([127,127,255])
 
     ## Draw Rainbow box between RED and GREEN (also givng you YELLOW and ORANGE) : ##
     if ( 0 ) :
