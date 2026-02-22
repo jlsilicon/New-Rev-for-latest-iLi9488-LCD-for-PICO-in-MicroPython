@@ -223,6 +223,27 @@ class Display(object):
         for y in range(0, h, 8):
             self.block(0, y, w - 1, y + 7, line)
 
+    def clear_rgb(self, rgb_list):
+        """Clear display.
+        Args:
+            color (Optional int): RGB565 color value (Default: 0 = Black).
+        """
+        w = self.width
+        h = self.height
+        # Clear display in 1024 byte blocks
+#        if color:
+#            if type(color) == bytes:
+#                line = color * (w * 8)
+#            else:
+#                line = color.to_bytes(2, 'big') * (w * 8)
+#                line = color.to_bytes(2, 'big') * (w * 8)
+#        else:
+#            line = bytearray(w * 16)
+#        line = color.to_bytes(2, 'big') * (w * 8)
+        line = ( ((255 - rgb_list[0]) << 16) + ((255 - rgb_list[1]) << 8) + ((255 - rgb_list[2]) << 0) ).to_bytes(3, 'big') * (w * 8)  
+        for y in range(0, h, 8):
+            self.block(0, y, w - 1, y + 7, line)
+            
     def display_off(self):
         """Turn display off."""
         self.write_cmd(self.DISPLAY_OFF)
@@ -1250,3 +1271,4 @@ class Display(object):
 
 
 ###
+
