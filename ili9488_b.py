@@ -3,11 +3,6 @@
 ## - also needed Inverion (255 - B) of Color Codes 
 
 
-#ili9488.py
-
-#!/usr/bin/python
-# -*-coding:utf-8 -*-
-
 """ILI9488 LCD/Touch module."""
 from time import sleep
 from math import cos, sin, pi, radians
@@ -341,6 +336,20 @@ class Display(object):
         line = color.to_bytes(2, 'big') * w
         self.block(x, y, x + w - 1, y, line)
 
+    def draw_hline_rgb(self, x, y, w, rgb_list):
+        """Draw a horizontal line.
+        Args:
+            x (int): Starting X position.
+            y (int): Starting Y position.
+            w (int): Width of line.
+            color (int): RGB565 color value.
+        """
+        if self.is_off_grid(x, y, x + w - 1, y):
+            return
+#        line = color.to_bytes(2, 'big') * w
+        line = ( ((255 - rgb_list[0]) << 16) + ((255 - rgb_list[1]) << 8) + ((255 - rgb_list[2]) << 0) ).to_bytes(3, 'big') * w 
+        self.block(x, y, x + w - 1, y, line)
+
     def draw_image(self, path, x=0, y=0, w=320, h=480):
         """Draw image from flash.
         Args:
@@ -453,6 +462,64 @@ class Display(object):
                 self.draw_pixel(x, y, color)
             else:
                 self.draw_pixel(y, x, color)
+            error -= abs(dy)
+            if error < 0:
+                y += ystep
+                error += dx
+
+    def draw_line_rgb(self, x1, y1, x2, y2, rgb_list ):
+        """Draw a line using Bresenham's algorithm.
+        Args:
+            x1, y1 (int): Starting coordinates of the line
+            x2, y2 (int): Ending coordinates of the line
+            color (int): RGB565 color value.
+        """
+        # Check for horizontal line
+        if y1 == y2:
+            if x1 > x2:
+                x1, x2 = x2, x1
+#            self.draw_hline(x1, y1, x2 - x1 + 1, color)
+            self.draw_hline_rgb(x1, y1, x2 - x1 + 1, rgb_list)
+            return
+        # Check for vertical line
+        if x1 == x2:
+            if y1 > y2:
+                y1, y2 = y2, y1
+#            self.draw_vline(x1, y1, y2 - y1 + 1, color)
+            self.draw_vline_rgb(x1, y1, y2 - y1 + 1, rgb_list)
+            return
+        # Confirm coordinates in boundary
+        if self.is_off_grid(min(x1, x2), min(y1, y2),
+                            max(x1, x2), max(y1, y2)):
+            return
+        # Changes in x, y
+        dx = x2 - x1
+        dy = y2 - y1
+        # Determine how steep the line is
+        is_steep = abs(dy) > abs(dx)
+        # Rotate line
+        if is_steep:
+            x1, y1 = y1, x1
+            x2, y2 = y2, x2
+        # Swap start and end points if necessary
+        if x1 > x2:
+            x1, x2 = x2, x1
+            y1, y2 = y2, y1
+        # Recalculate differentials
+        dx = x2 - x1
+        dy = y2 - y1
+        # Calculate error
+        error = dx >> 1
+        ystep = 1 if y1 < y2 else -1
+        y = y1
+        for x in range(x1, x2 + 1):
+            # Had to reverse HW ????
+            if not is_steep:
+#                self.draw_pixel(x, y, color)
+                self.draw_rgb_pixel(x, y, rgb_list)
+            else:
+#                self.draw_pixel(y, x, color)
+                self.draw_rgb_pixel(y, x, rgb_list)
             error -= abs(dy)
             if error < 0:
                 y += ystep
@@ -653,6 +720,21 @@ class Display(object):
         line = color.to_bytes(2, 'big') * h
         self.block(x, y, x, y + h - 1, line)
 
+    def draw_vline_rgb(self, x, y, h, rgb_list):
+        """Draw a vertical line.
+        Args:
+            x (int): Starting X position.
+            y (int): Starting Y position.
+            h (int): Height of line.
+            color (int): RGB565 color value.
+        """
+        # Confirm coordinates in boundary
+        if self.is_off_grid(x, y, x, y + h - 1):
+            return
+#        line = color.to_bytes(2, 'big') * h
+        line = ( ((255 - rgb_list[0]) << 16) + ((255 - rgb_list[1]) << 8) + ((255 - rgb_list[2]) << 0) ).to_bytes(3, 'big') * h 
+        self.block(x, y, x, y + h - 1, line)
+
     def fill_circle(self, x0, y0, r, color):
         """Draw a filled circle.
         Args:
@@ -731,6 +813,62 @@ class Display(object):
             self.draw_line(x0 + x, y0 - y, x0 + x, y0 + y, color)
             self.draw_line(x0 - x, y0 - y, x0 - x, y0 + y, color)
 
+    def fill_ellipse_rgb(self, x0, y0, a, b, rgb_list ):
+        """Draw a filled ellipse.
+        Args:
+            x0, y0 (int): Coordinates of center point.
+            a (int): Semi axis horizontal.
+            b (int): Semi axis vertical.
+            color (int): RGB565 color value.
+        Note:
+            The center point is the center of the x0,y0 pixel.
+            Since pixels are not divisible, the axes are integer rounded
+            up to complete on a full pixel.  Therefore the major and
+            minor axes are increased by 1.
+        """
+        a2 = a * a
+        b2 = b * b
+        twoa2 = a2 + a2
+        twob2 = b2 + b2
+        x = 0
+        y = b
+        px = 0
+        py = twoa2 * y
+        # Plot initial points
+#        self.draw_line_rgb(x0, y0 - y, x0, y0 + y, color)
+        self.draw_line_rgb(x0, y0 - y, x0, y0 + y, rgb_list)
+        # Region 1
+        p = round(b2 - (a2 * b) + (0.25 * a2))
+        while px < py:
+            x += 1
+            px += twob2
+            if p < 0:
+                p += b2 + px
+            else:
+                y -= 1
+                py -= twoa2
+                p += b2 + px - py
+#            self.draw_line(x0 + x, y0 - y, x0 + x, y0 + y, color)
+            self.draw_line_rgb(x0 + x, y0 - y, x0 + x, y0 + y, rgb_list )
+#            self.draw_line(x0 - x, y0 - y, x0 - x, y0 + y, color)
+            self.draw_line_rgb(x0 - x, y0 - y, x0 - x, y0 + y, rgb_list )
+        # Region 2
+        p = round(b2 * (x + 0.5) * (x + 0.5) +
+                  a2 * (y - 1) * (y - 1) - a2 * b2)
+        while y > 0:
+            y -= 1
+            py -= twoa2
+            if p > 0:
+                p += a2 - py
+            else:
+                x += 1
+                px += twob2
+                p += a2 - py + px
+#            self.draw_line(x0 + x, y0 - y, x0 + x, y0 + y, color)
+            self.draw_line_rgb(x0 + x, y0 - y, x0 + x, y0 + y, rgb_list)
+#            self.draw_line(x0 - x, y0 - y, x0 - x, y0 + y, color)
+            self.draw_line_rgb(x0 - x, y0 - y, x0 - x, y0 + y, rgb_list)
+
     def fill_hrect(self, x, y, w, h, color):
         """Draw a filled rectangle (optimized for horizontal drawing).
         Args:
@@ -762,7 +900,7 @@ class Display(object):
                        x + w - 1, chunk_y + remainder - 1,
                        buf)
 
-    def fill_hrect_rgb(self, x, y, w, h, v):
+    def fill_hrect_rgb(self, x, y, w, h, v, rgb_list):
         """Draw a filled rectangle (optimized for horizontal drawing).
         Args:
             x (int): Starting X position.
@@ -779,7 +917,8 @@ class Display(object):
         chunk_y = y
         if chunk_count:
 #            buf = color.to_bytes(2, 'big') * chunk_size
-            buf = color666(rgb_list[0], rgb_list[1], rgb_list[2])
+#            buf = color666(rgb_list[0], rgb_list[1], rgb_list[2])
+            buf = ( ((255 - rgb_list[0]) << 16) + ((255 - rgb_list[1]) << 8) + ((255 - rgb_list[2]) << 0) ).to_bytes(3, 'big') * chunk_size 
             for c in range(0, chunk_count):
                 self.block(x, chunk_y,
                            x + w - 1, chunk_y + chunk_height - 1,
@@ -788,7 +927,8 @@ class Display(object):
 
         if remainder:
 #            buf = color.to_bytes(2, 'big') * remainder * w
-            buf = color666(rgb_list[0], rgb_list[1], rgb_list[2])
+#            buf = color666(rgb_list[0], rgb_list[1], rgb_list[2])
+            buf = ( ((255 - rgb_list[0]) << 16) + ((255 - rgb_list[1]) << 8) + ((255 - rgb_list[2]) << 0) ).to_bytes(3, 'big') * chunk_size 
             self.block(x, chunk_y,
                        x + w - 1, chunk_y + remainder - 1,
                        buf)
@@ -1109,4 +1249,4 @@ class Display(object):
         self.cs.value = True
 
 
-
+###
