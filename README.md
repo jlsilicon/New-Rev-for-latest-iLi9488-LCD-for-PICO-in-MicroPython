@@ -44,11 +44,18 @@ Working Functions :
     # draw_rgb_pixel(x, y, [R,G,B])
     display.draw_rgb_pixel(5, 5, [255,127,0])
 
-    # fill_vrect_rgb( X,Y, W,H, [R,G,B] )
-    display.fill_vrect_rgb(0,0, 50,50, [127,127,127] )
-
     # draw_line_rgb(self, x1, y1, x2, y2, rgb_list )
     display.draw_line_rgb( 111, 111, 122, 233, [255,127,0] )
 
-    # def fill_ellipse_rgb(self, x0, y0, a, b, rgb_list )
+    # draw_rectangle_rgb( x, y, w, h, rgb_list):
+    display.draw_rectangle_rgb( 10, 10, 400, 300, [0,255,255])
+
+    # draw_ellipse_rgb(self, x0, y0, a, b, color) 
+    display.draw_ellipse_rgb( 120, 120, 122, 133, [127,255,0])
+
+    # fill_ellipse_rgb(self, x0, y0, a, b, rgb_list )
     display.fill_ellipse_rgb( 80, 90, 70, 60, [255,127,0] )
+
+    # fill_vrect_rgb( X,Y, W,H, [R,G,B] )
+    display.fill_vrect_rgb(0,0, 50,50, [127,127,127] )
+
