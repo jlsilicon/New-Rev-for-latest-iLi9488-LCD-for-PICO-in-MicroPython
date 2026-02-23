@@ -243,7 +243,7 @@ class Display(object):
         line = ( ((255 - rgb_list[0]) << 16) + ((255 - rgb_list[1]) << 8) + ((255 - rgb_list[2]) << 0) ).to_bytes(3, 'big') * (w * 8)  
         for y in range(0, h, 8):
             self.block(0, y, w - 1, y + 7, line)
-            
+
     def display_off(self):
         """Turn display off."""
         self.write_cmd(self.DISPLAY_OFF)
@@ -343,6 +343,67 @@ class Display(object):
             self.draw_pixel(x0 - x, y0 + y, color)
             self.draw_pixel(x0 + x, y0 - y, color)
             self.draw_pixel(x0 - x, y0 - y, color)
+
+    def draw_ellipse_rgb(self, x0, y0, a, b, rgb_list):
+        """Draw an ellipse.
+        Args:
+            x0, y0 (int): Coordinates of center point.
+            a (int): Semi axis horizontal.
+            b (int): Semi axis vertical.
+            color (int): RGB565 color value.
+        Note:
+            The center point is the center of the x0,y0 pixel.
+            Since pixels are not divisible, the axes are integer rounded
+            up to complete on a full pixel.  Therefore the major and
+            minor axes are increased by 1.
+        """
+        a2 = a * a
+        b2 = b * b
+        twoa2 = a2 + a2
+        twob2 = b2 + b2
+        x = 0
+        y = b
+        px = 0
+        py = twoa2 * y
+        # Plot initial points
+#        self.draw_pixel(x0 + x, y0 + y, rgb_list)
+        self.draw_rgb_pixel(x0 + x, y0 + y, rgb_list)
+        self.draw_rgb_pixel(x0 - x, y0 + y, rgb_list)
+        self.draw_rgb_pixel(x0 + x, y0 - y, rgb_list)
+        self.draw_rgb_pixel(x0 - x, y0 - y, rgb_list)
+        # Region 1
+        p = round(b2 - (a2 * b) + (0.25 * a2))
+        while px < py:
+            x += 1
+            px += twob2
+            if p < 0:
+                p += b2 + px
+            else:
+                y -= 1
+                py -= twoa2
+                p += b2 + px - py
+#            self.draw_pixel(x0 + x, y0 + y, rgb_list)
+            self.draw_rgb_pixel(x0 + x, y0 + y, rgb_list)
+            self.draw_rgb_pixel(x0 - x, y0 + y, rgb_list)
+            self.draw_rgb_pixel(x0 + x, y0 - y, rgb_list)
+            self.draw_rgb_pixel(x0 - x, y0 - y, rgb_list)
+        # Region 2
+        p = round(b2 * (x + 0.5) * (x + 0.5) +
+                  a2 * (y - 1) * (y - 1) - a2 * b2)
+        while y > 0:
+            y -= 1
+            py -= twoa2
+            if p > 0:
+                p += a2 - py
+            else:
+                x += 1
+                px += twob2
+                p += a2 - py + px
+#            self.draw_pixel(x0 + x, y0 + y, rgb_list)
+            self.draw_rgb_pixel(x0 + x, y0 + y, rgb_list)
+            self.draw_rgb_pixel(x0 - x, y0 + y, rgb_list)
+            self.draw_rgb_pixel(x0 + x, y0 - y, rgb_list)
+            self.draw_rgb_pixel(x0 - x, y0 - y, rgb_list)
 
     def draw_hline(self, x, y, w, color):
         """Draw a horizontal line.
@@ -615,6 +676,23 @@ class Display(object):
         self.draw_hline(x, y2, w, color)
         self.draw_vline(x, y, h, color)
         self.draw_vline(x2, y, h, color)
+
+    def draw_rectangle_rgb(self, x, y, w, h, rgb_list):
+        """Draw a rectangle.
+        Args:
+            x (int): Starting X position.
+            y (int): Starting Y position.
+            w (int): Width of rectangle.
+            h (int): Height of rectangle.
+            color (int): RGB565 color value.
+        """
+        x2 = x + w - 1
+        y2 = y + h - 1
+#        self.draw_hline(x, y, w, color)
+        self.draw_hline_rgb(x, y, w, rgb_list)
+        self.draw_hline_rgb(x, y2, w, rgb_list)
+        self.draw_hline_rgb(x, y, h, rgb_list)
+        self.draw_hline_rgb(x2, y, h, rgb_list)
 
     def draw_sprite(self, buf, x, y, w, h):
         """Draw a sprite (optimized for horizontal drawing).
@@ -1271,4 +1349,4 @@ class Display(object):
 
 
 ###
-
+        
