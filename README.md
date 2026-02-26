@@ -6,13 +6,16 @@ This is a new Tested Working Code Rev for the latest iLi9488 LCD in MicroPython
 Schematic :
 https://content.instructables.com/FSZ/UTYB/KSONJ988/FSZUTYBKSONJ988.jpg?frame=true&width=1024&height=1024&fit=bounds
 
-I tried it with no luck.
+-
+
+I tried the old code on the internet with no luck.
 I commented out the images Loop.
 Additionally , I added drawing different Colors and Sizes of Rectangles every 3 seconds on the Screen.
 But, all I can get is a Blank White screen.
 
 -
 
+My new Rev.
 Code in Progress :
 
 So far :
